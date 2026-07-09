@@ -5,6 +5,7 @@ Decision-ready scoping documents for proposed Dash improvements across Core, Mob
 ## Contents
 
 - [dash-ideas-scoping.md](dash-ideas-scoping.md) ([PDF](dash-ideas-scoping.pdf)), seven candidate projects scoped against four roadblocks (pooled masternodes, speed of capital movement to and from Platform, DashPay usability, privacy). Headline recommendation, an audit-gated path to instant credit withdrawals (P1), a contact-payments UTXO-hygiene prototype (P4), and a research-gated static-address protocol (P3).
+- [asset-locks-v2-retry-payout.md](asset-locks-v2-retry-payout.md) ([PDF](asset-locks-v2-retry-payout.pdf)), a one-page upstream request distilled from P1. It asks the in-flight Asset Locks v2 specification to guarantee that every quorum signing for a withdrawal index commits to the same payout, with a retry-or-abandon liveness rule, which makes instant acceptance of Platform withdrawals a pure receiving-policy change.
 
 ## Method
 
