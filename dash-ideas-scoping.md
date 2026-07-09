@@ -1,4 +1,4 @@
-# Scoping of Proposed Dash Projects (July 2026, v3.1)
+# Scoping of Proposed Dash Projects (July 2026, v3.2)
 
 This document sizes up seven candidate Dash projects. They come from two community proposals (pay a username who is not yet a contact, make InstantSend work on transactions that have no inputs) and one privacy sketch (never reuse a UTXO), all aimed at four roadblocks, pooled masternodes, speed of capital movement to and from Platform, DashPay usability, and privacy. The projects span all three layers, Core, the mobile wallets, and the Evolution Platform.
 
@@ -14,7 +14,7 @@ Each section opens with a Plain words explainer for the general reader and then 
 | P4 | No-input-merging coin selection | Mobile | Wallet policy only | S + measurement | Prototype, contact payments only |
 | P5 | Cross-chain shielded consolidation (via ZEC) | Mobile + external | Product integration | L | Drop |
 | P6 | Pay to a username that is not yet a contact | Platform + Mobile | Data contract + wallet | M-L | Park until Platform stabilizes, design now |
-| P7 | Shielded instant credit withdrawals | Core + Platform | Research-grade | XL | Decompose; long-term home of the consolidation valve |
+| P7 | Shielded instant credit withdrawals | Core + Platform | Upstream shielded pool + boundary work | Boundary: P1 + wallet layer | Shielded half in progress upstream; do P1 and boundary hygiene |
 
 ## P1. Instant acceptance for asset unlock transactions (Core)
 
@@ -101,11 +101,11 @@ Sizing, medium for the BIP47-style variant, while the P3 variant inherits the la
 
 **Plain words.** Dash already has a mechanism that breaks the link between coins going in and coins coming out. Deposit DASH into Platform and it melts into a shared pool of credits, where the individual coins stop existing. Withdraw later and the network mints a brand-new transaction with no inputs at all. On the main chain there is no thread to pull from the withdrawal back to the deposit. That is structurally the same trick privacy systems on other chains work hard to build.
 
-So why is this not already a privacy feature? Because Platform itself keeps public books. Anyone can look up an identity's credit balance, see the deposit that funded it, and watch the withdrawal that drained it, with amounts and timing in the clear. The link erased on the main chain survives in Platform's records. Making those records private, for example with the kind of shielded pool Zcash uses, is a serious multi-year research project, and it only pays off if withdrawals are also fast, which is project P1. That is why this document treats shielded instant withdrawals as the long game, P1 now, the shielded half when it can be seriously resourced.
+So why is this not already a privacy feature? Because Platform itself keeps public books. Anyone can look up an identity's credit balance, see the deposit that funded it, and watch the withdrawal that drained it, with amounts and timing in the clear. The link erased on the main chain survives in Platform's records. Making those records private is no longer hypothetical. Dash announced an integration of Zcash's Orchard shielded pool into the Platform chain in early 2026, with launch planned after security audits, bringing shielded balances that hide amounts, sender, and recipient, with view-key disclosure for anyone who needs to show their books. Once that lands, the missing piece of a private, usable withdrawal is speed at the boundary, which is exactly project P1.
 
 **Details.** Asset lock transactions deposit fragmented UTXOs into a pooled balance, and withdrawals return as zero-input asset unlock transactions with no UTXO-graph link to the deposits. That is the same shape as Quai's protocol-level conversion between its UTXO ledger and its account ledger (a shape analogy only, Quai's conversions are transparent, and its consolidation privacy instead comes from protocol-incentivized cooperative reaggregation, a many-party CoinJoin-like mechanism). Today the linkage survives in public records. Platform tracks identity balances and the top-up and credit-withdrawal state transitions, and the linked Core asset lock carries the deposited amount, so amounts and timing are visible on both legs, the same weakness that sank the cross-chain route in P5.
 
-The credit pool becomes a privacy tool only if those records are made private, and that is a multi-year research question, not a scopeable feature. The dependency order is concrete. P1 makes pool round trips fast enough to use at all. P4 and P3 carry the near-term privacy roadmap. P7 is where consolidation privacy eventually lives if the research half lands. Until then, ship P1 and revisit the shielded half only as a seriously resourced research proposal.
+The credit pool becomes a privacy tool only if those records are made private, and that work is now in progress upstream, the Orchard shielded pool integration on the Platform chain, announced in February 2026 with launch planned after security audits. That changes this project's shape. The shielded half is being built, so the community-scoped work concentrates on the boundary, P1 for instant withdrawals, and wallet-level behavior that protects the pool's entrances and exits from amount and timing correlation, since a shielded pool is only as private as its boundary traffic. P4 and P3 carry the wallet-layer roadmap in the meantime, and a fuller re-scoping of this section against the shipped feature belongs in the next revision.
 
 ## Recommended sequence
 
@@ -122,6 +122,7 @@ The credit pool becomes a privacy tool only if those records are made private, a
 - v2.2 added two design observations from the Quai comparison. P4 gained the denominated-payments hypothesis, and P7 gained the credit-pool consolidation-valve framing.
 - v3 is a plain-language rewrite after community feedback. Every section now opens with a plain-English explainer. The technical content is unchanged from v2.2.
 - v3.1 renames the openers to "Plain words" and expands them into fuller explainers for the general reader, after further community feedback. The technical content remains unchanged from v2.2.
+- v3.2 corrects P7's status. The Orchard shielded pool integration on the Platform chain (announced February 2026, launching after security audits) means the shielded half is in development upstream, not a research hypothetical as earlier versions stated. P7's remaining scope is the boundary, P1 plus wallet-level hygiene. A fuller re-scoping of P3, P4, and P7 against the shipped feature is planned for the next major revision.
 
 ## Credits
 
