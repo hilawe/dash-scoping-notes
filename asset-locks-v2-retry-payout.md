@@ -1,5 +1,7 @@
 # A Retry-Payout Guarantee for Asset Locks v2
 
+Hilawe Semunegus and Joel Valenzuela (TheDesertLynx)
+
 Proposed requirement for the Asset Locks v2 specification listed in the June 2026 Dash Core Group development update. One page, one ask, submitted while the draft is still in flight, which is the cheapest moment a guarantee like this will ever have.
 
 **Plain words.** When credits leave Platform, the money arrives on the Core chain as a special withdrawal transaction with no inputs, already signed by a masternode quorum. Exchanges still wait about 2.5 minutes for a mined, ChainLocked block before crediting it, because of one loose end in the rules. A withdrawal that expires unmined can be retried, and nothing promises the retry pays the same place the same amount, or that a retry happens at all. Close that loose end with one short paragraph in Asset Locks v2 and wallets can credit withdrawals the moment they appear, with no Core consensus change and no new network message. With shielded pools scheduled to activate on or around July 12, 2026 per the July 9 development update, withdrawal speed is the protocol-side missing piece of an instant, private cash-out, and this is its cheapest fix.
@@ -34,4 +36,4 @@ The first two clauses may already describe how the implementation behaves. In th
 
 ## Context
 
-This requirement is the load-bearing question of project P1 in [dash-ideas-scoping.md](dash-ideas-scoping.md), where the full analysis lives, including the fallback lock-message design for the case where the guarantee cannot hold, the mempool-eviction and fee questions the audit should also answer, and the child-transaction and light-client extensions that can be layered on later. Withdrawal speed is the protocol-side piece of private cash-out. The wallet-side piece, protecting the pool boundary from amount and timing correlation, is covered under P4 and P7 of the same document. The underlying idea, extending instant settlement to zero-input transactions, is due to Joel Valenzuela (TheDesertLynx).
+This requirement is the load-bearing question of project P1 in [dash-ideas-scoping.md](dash-ideas-scoping.md), where the full analysis lives, including the fallback lock-message design for the case where the guarantee cannot hold, the mempool-eviction and fee questions the audit should also answer, and the child-transaction and light-client extensions that can be layered on later. Withdrawal speed is the protocol-side piece of private cash-out. The wallet-side piece, protecting the pool boundary from amount and timing correlation, is covered under P4 and P7 of the same document.
