@@ -16,6 +16,10 @@ Living documents. Verdicts and sizings get revised as designs are audited and pr
 
 Issues and pull requests are welcome, especially corrections with a primary source attached.
 
+## Credits
+
+The originating proposals and the roadblock framing behind these documents come from [Joel Valenzuela](https://github.com/thedesertlynx) (TheDesertLynx), business development and marketing lead for the Dash DAO. The scoping, the verdicts, and any errors are the maintainer's.
+
 ## License
 
 MIT. Use anything here freely, attribution appreciated but not required.
