@@ -1,6 +1,6 @@
 # Scoping of Proposed Dash Projects (July 2026, v4.1)
 
-Hilawe Semunegus, with project ideas and the wallet-policy design co-developed with Joel Valenzuela (TheDesertLynx)
+Hilawe Semunegus, with the originating ideas, roadblock framing, and wallet-policy design by Joel Valenzuela (TheDesertLynx)
 
 This document sizes up candidate Dash projects aimed at four roadblocks, pooled masternodes, speed of capital movement to and from Platform, DashPay usability, and privacy. Versions 1 through 3 scoped seven separate projects, P1 through P7. Version 4 restructures them into four, because the ground moved. The Orchard shielded pool ships with Platform v4.0, which has locked in on the network with activation scheduled on or around July 12, 2026 (per the [Dash roadmap](https://www.dash.org/roadmap/) and the public Dash Core Group development updates of June 25 and July 9, 2026), and several of the original projects turn out to be halves of the same thing once the pool is real. The old numbering is kept in parentheses so earlier discussion stays traceable.
 
