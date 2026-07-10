@@ -1,4 +1,4 @@
-# Scoping of Proposed Dash Projects (July 2026, v4.1)
+# Scoping of Proposed Dash Projects (July 2026, v4.2)
 
 Hilawe Semunegus, with the originating ideas, roadblock framing, and wallet-policy design by Joel Valenzuela (TheDesertLynx)
 
@@ -11,7 +11,7 @@ Each section opens with a Plain words explainer for the general reader and then 
 | # | Project | Was | Layer | Size | Verdict |
 |---|---------|-----|-------|------|---------|
 | D1 | Instant, private credit withdrawals | P1 + P7 | Core + Platform | D0 audit 1-2 wk; then policy (S-M) or lock message (L) | Do first; the spec request is written and ready to go upstream |
-| D2 | Batch-rotation wallet policy | P4 redesigned; P5 dropped | Mobile | M prototype + measurement gate | Finalize spec now, build behind a toggle once the pool activates |
+| D2 | Batch-rotation wallet policy | P4 redesigned; P5 dropped | Mobile | M prototype + measurement gate | Contingency; D1 first, build only if per-payment withdrawals prove capped, costly, or slow |
 | D3 | Private payments to any username | P3 + P6 | Platform + Mobile, Core research annex | M (payment codes); L (static-address annex) | Design now alongside the contact-requests v2 work, build when Platform stabilizes |
 | D4 | Coinbase maturity relaxation under ChainLocks | P2 | Core | S code, L process | Fold into a future hard fork, not standalone |
 
@@ -38,7 +38,7 @@ One boundary caveat keeps this honest. A shielded pool is only as private as its
 
 **Plain words.** Keep savings shielded, and keep a small transparent pot for everyday spending. The pot has a floor and a ceiling, say 5 and 10 DASH. It starts by pulling roughly 10 from the shielded balance to a fresh address, and normal spending happens from it, change addresses, combined inputs, single-address invoices, all ordinary wallet behavior. When the pot drops below the floor, the wallet rotates. A fresh draw lands on a brand-new address as a new, sealed batch, and the old batch's leftovers go back to the shielded balance later, in random pieces, at random times. Coins from different batches are never spent together. To an observer, each batch is a disposable mini-wallet with no visible relation to the ones before or after it. Financial history gets chopped into short, unlinkable chapters.
 
-This design, developed by Joel Valenzuela through several rounds of refinement, replaces the earlier no-merge proposal (P4), which bought weaker privacy at a higher price. Within a batch the wallet behaves completely normally, so invoices, merchants, and exchange deposits keep working, which is the thing the old proposal could not do.
+This design, developed by Joel Valenzuela through several rounds of refinement, replaces the earlier no-merge proposal (P4), which bought weaker privacy at a higher price. Within a batch the wallet behaves completely normally, so invoices, merchants, and exchange deposits keep working, which is the thing the old proposal could not do. One caveat from its own designer changes the verdict, though. If credit withdrawals get an instant finality guarantee (project D1), most users may not need any of this, because they can pay straight from the shielded balance per purchase. The details below end with why the design is kept anyway, as a contingency rather than a build commitment.
 
 **Details.** The policy in its current form:
 
@@ -64,6 +64,8 @@ The whole design assumes a healthy, busy shielded pool, since the crowd is the p
 
 The measurement gate before shipping, prototype behind a toggle with measured outputs. Boundary-correlation resistance under simulation at both small and realistic adoption levels (can a timing-and-amount correlator re-link batches). Fee overhead per rotation epoch. Stranded-dust rate. A restore drill, recover from seed plus metadata backup mid-rotation without batch merging or fund loss. Zero regressions on invoice and deposit flows. Ship or kill on those numbers.
 
+Does D1 make this unnecessary? The designer's own assessment, delivered with the final policy, is that the whole scheme is redundant if credit withdrawals get an instant finality guarantee, because a wallet could then pay every recipient directly from the shielded balance, one fresh zero-input transaction per payment, no pot, no batches, no rotation. For sender clustering on the Core chain that is correct and better, each payment is a fresh zero-input transaction with no past and no common-input link to any other payment, while batch rotation still correlates everything inside a batch. The boundary caveat from D1 still applies, every exit publishes an amount and a timestamp, so many small payment-shaped exits can still leak through amount patterns, timing, recipient reuse, network origin, and Platform-side metadata, which is why Tor and recipient hygiene stay relevant in either design. Three considerations keep D2 as a contingency rather than a deletion. Throughput, DIP-27 limits how much can leave the credit pool over its 576-block safety window (withdrawal limits are on the spec's own list of reasons an unlock may fail to mine), and a network where every small purchase is a quorum-signed withdrawal presses on those limits and on the signing pipeline, so high-frequency small spending may still need a transparent pot. Cost, every payment becomes a Platform state transition plus a Core transaction, and fee floors price out the micropayments a pot amortizes. And insurance, if D1 stalls or lands in its weak form, pot-and-rotation is the fallback that works without it. The sequencing is therefore D1 first, then measure per-payment withdrawal fees, latency, and cap headroom, and build D2 only if those numbers say a pot is still needed.
+
 Retired pieces, recorded for traceability. The per-payment no-merge policy (old P4) is withdrawn, its costs (double fees, split payments, invoice breakage) bought less privacy than batch rotation buys for less. The cross-chain consolidation route through Zcash (old P5) stays dropped, its full record is in the v2 and v3 revision notes, the short version is that cross-chain exchanges record swap addresses, amounts, and timing in clear on their own ledgers, so the round trip publishes what it was meant to hide, and with a native shielded pool arriving there is no reason to rent another chain's.
 
 ## D3. Private payments to any username (was P3 and P6)
@@ -88,7 +90,7 @@ A priority note the shielded pool forces. With private balances and private tran
 ## Recommended sequence
 
 1. D1 now. Send the Asset Locks v2 retry-payout request upstream while the spec is in flight, and run the D0 audit, one to two weeks, choosing Path A or Path B on its answer.
-2. D2 spec finalization now (schedule-driven refills, counterparty-reuse handling, fingerprint discipline, private lookup), prototype behind a toggle once the shielded pool activates, ship or kill on the measurement gate.
+2. D2 held as a contingency. Finish the spec on paper (schedule-driven refills, counterparty-reuse handling, fingerprint discipline, private lookup, state recovery), but build only if the post-D1 measurements, per-payment withdrawal fees, latency, and cap headroom, say a transparent pot is still needed.
 3. D3 as a design document now, synced with the contact-requests v2 work, payment-code and pay-to-decrypt options first, the silent-payment annex research-gated behind its derivation spec and scan-cost benchmark.
 4. D4 folded into the next hard fork once its initial-sync question is answered.
 
@@ -100,6 +102,7 @@ A priority note the shielded pool forces. With private balances and private tran
 - v3 and v3.1 rewrote the document in plain language after community feedback, adding the Plain words explainers. The technical content was unchanged from v2.2.
 - v3.2 through v3.4 corrected P7's status as the Orchard shielded pool integration became public and then locked in, activation on or around July 12, 2026, and pointed P1's audit at the in-flight Asset Locks v2 specification.
 - v4 restructures seven projects into four after co-design with Joel Valenzuela. P1 and P7 merge into D1 (the shielded half now ships upstream, so the boundary is the whole project). P4 is replaced by the batch-rotation wallet policy as D2, with the old no-merge policy withdrawn and P5's record folded in. P3 and P6 merge into D3 with four design options and the silent-payment work re-sequenced as a research annex. P2 continues unchanged as D4. The companion one-page spec request for D1 is published alongside this document.
+- v4.2 demotes D2 from build-after-activation to contingency, following the designer's own assessment that instant withdrawal finality (D1) lets wallets pay per purchase directly from the shielded balance. The adjudication keeps D2 for three reasons, DIP-27 withdrawal limits, per-payment fee floors, and insurance against D1 stalling or landing in its weak form, with post-D1 measurements deciding whether it is ever built.
 - v4.1 adjudicates a full three-model adversarial round on v4 and the companion request. The convergent findings, all fixed, the liveness rule is strengthened to retry-until-mined because any abandonment path demotes instant credit from final to provisional, D2 gains two residual risks (state recovery across seed restore, fee and mempool behavior) plus an explicit liquidity state-machine requirement and a restore drill in the measurement gate, the revised contact-request claim in D3 is marked unverified pending a public artifact, the payment-code option's key-separation and recovery questions are stated, and the companion request's cross-references now use the v4 numbering. One review disputed the shielded-pool activation itself, that finding was rejected against the Dash roadmap, the June 25 and July 9 development updates, and the two concurring reviews.
 
 ## Credits
