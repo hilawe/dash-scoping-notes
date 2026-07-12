@@ -1,6 +1,6 @@
 # Coinbase Maturity Relaxation under ChainLocks
 
-Hilawe Semunegus
+Hilawe Semunegus, on an idea from Joel Valenzuela (TheDesertLynx)
 
 The writeup for project D4 in [dash-ideas-scoping.md](dash-ideas-scoping.md), a small consensus change worth drafting now and attaching to the next hard fork rather than running on its own.
 
@@ -34,4 +34,4 @@ Small code, large process. The maturity rule is consensus, so any change is a ha
 
 ## Where this sits
 
-This is project D4 in the scoping document, formerly P2. It is the lowest-urgency of the four, useful and coherent, but not worth its own hard fork.
+This is project D4 in the scoping document, formerly P2. It is the lowest-urgency of the four, useful and coherent, but not worth its own hard fork. The idea of applying ChainLock finality to coinbase spendability is Joel Valenzuela's.
