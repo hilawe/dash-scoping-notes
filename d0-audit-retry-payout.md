@@ -8,7 +8,7 @@ The phase-D0 audit for project D1 in [dash-ideas-scoping.md](dash-ideas-scoping.
 
 ## Verdict
 
-Path A. The retry-payout invariant already holds in the Platform implementation. Instant acceptance of credit withdrawals is achievable as receiving-wallet and exchange policy plus a spec write-down in Asset Locks v2, with no Core consensus change and no new network message. The audit also surfaced two real edge cases, both on the withdrawing user's side rather than the receiver's, that the specification should address while it is open.
+Path A. The retry-payout invariant already holds in the Platform implementation. Instant acceptance of credit withdrawals is achievable as receiving-wallet and exchange policy plus a spec write-down in Asset Locks v2, with no Core consensus change, no new network message, and no new Platform code. It rests on payout safety, the property that a signed unlock settles as exactly what it shows or not at all, and the audit confirms that property holds today, so what enables instant acceptance is codification plus receiver-side wallet logic rather than a build. The audit also surfaced two real edge cases, both on the withdrawing user's side rather than the receiver's, that the specification should address while it is open. Those are liveness gaps in the stuck-withdrawal path, and their fixes, a fee bump on retry and a refund terminal state, are separate user-protection hardening, not prerequisites for instant acceptance.
 
 ## What changes on retry, and what does not
 
@@ -74,7 +74,7 @@ The [Asset Locks v2 retry-payout request](asset-locks-v2-retry-payout.md) asks f
 
 - Payout fixed per index across signings, already true, immutable document fields. The request becomes a write-down of existing behavior as a normative guarantee, which is the cheap and correct outcome.
 - Fee never taken from the payout, already true, separate fee field debited from the pool.
-- Retry-until-mined liveness, already the implemented behavior, EXPIRED cycles indefinitely.
+- Retry-until-mined liveness, implemented as indefinite re-signing of EXPIRED withdrawals. This delivers the liveness form for any withdrawal that can mine, but indefinite re-signing at a fixed fee is not the same as guaranteed mining, so the strong until-mined form needs the fee-bump refinement below to hold for the stuck-withdrawal case.
 - Receiver may treat a mempool unlock as payout-final and deduplicate by index, supported by the code, and worth stating so integrators have one paragraph to cite.
 
 The one refinement the audit adds to the request, allow and specify fee-bump-on-retry, and pair the retry-until-mined guarantee with a defined resolution for a withdrawal that is genuinely unmineable, since today that path debits the user with no refund. These protect the withdrawing user and do not weaken the receiver guarantee.
